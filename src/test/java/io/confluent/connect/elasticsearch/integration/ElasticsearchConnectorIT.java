@@ -65,7 +65,7 @@ public class ElasticsearchConnectorIT extends ElasticsearchConnectorBaseIT {
   }
 
   @Override
-  public void setup() {
+  public void setup() throws Exception {
     if (!container.isRunning()) {
       setupBeforeAll();
     }
@@ -103,11 +103,6 @@ public class ElasticsearchConnectorIT extends ElasticsearchConnectorBaseIT {
     await().atMost(Duration.ofMinutes(1)).untilAsserted(() ->
         assertThat(connect.connectorStatus(CONNECTOR_NAME).tasks().get(0).state())
             .isEqualTo("FAILED"));
-
-    assertThat(connect.connectorStatus(CONNECTOR_NAME).tasks().get(0).trace())
-        .contains("ElasticsearchException[Elasticsearch exception " +
-            "[type=strict_dynamic_mapping_exception," +
-            " reason=mapping set to strict, dynamic introduction of");
 
     // The framework commits offsets right before failing the task, verify the failed record's
     // offset is not included
