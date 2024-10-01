@@ -106,6 +106,7 @@ public class ElasticsearchClient {
       )
   );
   private static final String UNKNOWN_VERSION_TAG = "Unknown";
+
   protected final AtomicInteger numBufferedRecords;
   private final AtomicReference<ConnectException> error;
   protected final BulkProcessor bulkProcessor;
@@ -118,8 +119,8 @@ public class ElasticsearchClient {
   private final Time clock;
   private final Lock inFlightRequestLock = new ReentrantLock();
   private final Condition inFlightRequestsUpdated = inFlightRequestLock.newCondition();
-  private final String esVersion;
   private final DualWriteProducer<ConnectRecord> dualWriteProducer;
+  private final String esVersion;
 
   @SuppressWarnings("deprecation")
   public ElasticsearchClient(
@@ -598,7 +599,7 @@ public class ElasticsearchClient {
           );
 
           log.trace("{} version conflict for operation {} on document '{}' version {}"
-                          + " in index '{}'",
+                          + " in index '{}' and stacktrace '{}'",
                   request != null ? request.versionType() : "UNKNOWN",
                   response.getOpType(),
                   response.getId(),
